@@ -1,5 +1,7 @@
 package edu.pitt.cs;
 
+import static org.mockito.ArgumentMatchers.nullable;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,8 +19,20 @@ public class RentACatImpl implements RentACat {
 	 * @return true if cat exists and was rented out, false otherwise
 	 */
 
+	 @Override
 	public boolean returnCat(int id) {
-		// TODO: Fill in
+		Cat cat = getCat(id);
+		if(cat!=null)
+		{
+			if(cat.getRented())
+			{
+				cat.returnCat();
+				System.out.println("Welcome back, " + cat.getName() + "!");
+				return true;
+			}
+			else
+				System.out.println(cat.getName() + " is already here!");
+		}
 		return false;
 	}
 
@@ -31,9 +45,25 @@ public class RentACatImpl implements RentACat {
 	 * @param id the ID of the cat to rent
 	 * @return true if cat exists and was not rented out, false otherwise
 	 */
-
+	@Override
 	public boolean rentCat(int id) {
-		// TODO: Fill in
+		Cat cat = getCat(id);
+		if(cat!=null)
+		{
+			if(!cat.getRented())
+			{
+				cat.rentCat();
+				System.out.println(cat.getName() + " has been rented.");
+				return true;
+			}
+			else
+			{
+				System.out.println("Sorry, " + cat.getName() + " is not here!");
+				return false;
+			}
+			
+		}
+		
 		return false;
 	}
 
@@ -45,9 +75,14 @@ public class RentACatImpl implements RentACat {
 	 * @param id the ID of the cat to rename
 	 * @return true if cat exists, false otherwise
 	 */
-
+	@Override
 	public boolean renameCat(int id, String name) {
-		// TODO: Fill in
+		Cat cat = getCat(id);
+		if(cat != null)
+		{
+			cat.renameCat(name);
+			return true;
+		}
 		return false;
 	}
 
@@ -60,10 +95,18 @@ public class RentACatImpl implements RentACat {
 	 * 
 	 * @return "\n"-delimited list of rentable cats
 	 */
-
+	@Override
 	public String listCats() {
-		// TODO: Fill in
-		return "WRITE CODE FOR THIS";
+		String list = "";
+		for(int i=0; i<cats.size(); i++)
+		{
+			if(!cats.get(i).getRented())
+			{
+				list += cats.get(i).toString();
+				list += "\n";
+			}
+		}
+		return list;
 	}
 
 	/**
@@ -103,7 +146,7 @@ public class RentACatImpl implements RentACat {
 	 * 
 	 * @param c the Cat to add
 	 */
-
+	@Override
 	public void addCat(Cat c) {
 		cats.add(c);
 	}
